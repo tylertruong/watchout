@@ -10,20 +10,20 @@ class Game {
     this.highScore = 0;
     this.currentScore = 0;
     setInterval(() => {
+      this.currentScore++;
       this.data = this.generateCircles();
       this.updateScreen(this.data);
       this.updateScore();
-      this.mousePosition();
     }, 1000);
 
   }
 
   updateScore() {
     document.getElementsByClassName('collisions')[0].textContent = 'Collisions: ' + this.collisions;
+    document.getElementsByClassName('highscore')[0].textContent = 'High Score: ' + this.highScore;
+    document.getElementsByClassName('current')[0].textContent = 'Current Score: ' + this.currentScore;
   }
-  _distance(p1, p2, d1, d2) {
-    return Math.sqrt(Math.pow((p1 - d1), 2) + Math.pow((p2 - d2), 2));
-  }
+
 
   makePlayer() {
     var images = d3.select('svg');
@@ -39,27 +39,32 @@ class Game {
 
   }
 
-  mousePosition() {
-    document.onmousemove = e => {
-      var circle = d3.select('circle');
-      var x = circle[0][0]['attributes']['cx']['value'];
-      var y = circle[0][0]['attributes']['cx']['value'];
-
-      for (var i = 0; i < this.data.length; i++) {
-        if (this._distance(x, y, this.data[i].x, this.data[i].y) < 60) {
-          this.collisions++;
-          this.currentScore = 0;
+  collision() {
+    let distance = (p1, p2, d1, d2) => {
+      return Math.sqrt(Math.pow((p1 - d1), 2) + Math.pow((p2 - d2), 2));
+    };
+    let game = this;
+    return function () {
+      var x1 = d3.select('circle').attr('cx');
+      var y1 = d3.select('circle').attr('cy');
+      var x2 = d3.select(this).attr('x');
+      var y2 = d3.select(this).attr('y');
+      if (distance(x1, y1, x2, y2) < 40) {
+        game.collisions++;
+        if (game.currentScore > game.highScore) {
+          game.highScore = game.currentScore;
         }
+        game.currentScore = 0;
       }
     };
   }
-
 
   updateScreen (data) {
     var images = d3.select('svg').selectAll('image').data(data);
     
     images
       .transition()
+      .tween('collisions', this.collision.bind(this))
       .duration(1000)
       .attr('href', 'asteroid.png')
       .attr('height', 60)

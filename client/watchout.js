@@ -12,10 +12,15 @@ class Game {
     setInterval(() => {
       this.data = this.generateCircles();
       this.updateScreen(this.data);
+      this.updateScore();
+      this.mousePosition();
     }, 1000);
-    setInterval(this.mousePosition(), 500);
+
   }
 
+  updateScore() {
+    document.getElementsByClassName('collisions')[0].textContent = 'Collisions: ' + this.collisions;
+  }
   _distance(p1, p2, d1, d2) {
     return Math.sqrt(Math.pow((p1 - d1), 2) + Math.pow((p2 - d2), 2));
   }
@@ -23,10 +28,7 @@ class Game {
   makePlayer() {
     var images = d3.select('svg');
     let dragmove = () => d3.select('circle').attr('cx', d3.event.x).attr('cy', d3.event.y);
-
     let drag = d3.behavior.drag().on('drag', dragmove);
-
-
     
     images
       .append('circle')
@@ -59,7 +61,7 @@ class Game {
     images
       .transition()
       .duration(1000)
-      .attr('xlink:href', 'asteroid.png')
+      .attr('href', 'asteroid.png')
       .attr('height', 60)
       .attr('width', 60)
       .attr('x', function(d) { return d.x; })
@@ -68,7 +70,7 @@ class Game {
     images
       .enter()
       .append('image')
-      .attr('xlink:href', 'asteroid.png')
+      .attr('href', 'asteroid.png')
       .attr('height', 60)
       .attr('width', 60)
       .attr('x', function(d) { return d.x; })

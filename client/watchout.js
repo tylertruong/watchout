@@ -51,7 +51,7 @@ class Game {
       var x2 = d3.select(this).attr('x');
       var y2 = d3.select(this).attr('y');
       if (distance(x1, y1, x2, y2) < 60) {
-        document.body.classList.add("redbody");
+        document.body.classList.add('redbody');
         d3.select('.player').attr('href', 'images/explosion.gif');
         setTimeout(() => {
           document.body.classList.remove('redbody');

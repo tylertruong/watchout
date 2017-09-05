@@ -27,14 +27,15 @@ class Game {
 
   makePlayer() {
     var images = d3.select('svg');
-    let dragmove = () => d3.select('circle').attr('cx', d3.event.x).attr('cy', d3.event.y);
+    let dragmove = () => d3.select('image').attr('x', d3.event.x).attr('y', d3.event.y);
     let drag = d3.behavior.drag().on('drag', dragmove);
     
     images
-      .append('circle')
-      .attr('r', 30)
-      .attr('cx', 0)
-      .attr('cy', 0)
+      .append('image')
+      .attr('href', 'images/spaceship.png')
+      .attr('class', 'player')
+      .attr('height', 60)
+      .attr('width', 60)
       .call(drag);
 
   }
@@ -45,11 +46,19 @@ class Game {
     };
     let game = this;
     return function () {
-      var x1 = d3.select('circle').attr('cx');
-      var y1 = d3.select('circle').attr('cy');
+      var x1 = d3.select('.player').attr('x');
+      var y1 = d3.select('.player').attr('y');
       var x2 = d3.select(this).attr('x');
       var y2 = d3.select(this).attr('y');
-      if (distance(x1, y1, x2, y2) < 40) {
+      if (distance(x1, y1, x2, y2) < 60) {
+        document.body.classList.add("redbody");
+        d3.select('.player').attr('href', 'images/explosion.gif');
+        setTimeout(() => {
+          document.body.classList.remove('redbody');
+        }, 50);
+        setTimeout(() => {
+          d3.select('.player').attr('href', 'images/spaceship.png');
+        }, 1000);
         game.collisions++;
         if (game.currentScore > game.highScore) {
           game.highScore = game.currentScore;
@@ -61,21 +70,20 @@ class Game {
 
   updateScreen (data) {
     var images = d3.select('svg').selectAll('image').data(data);
+    var enemies = d3.select('svg').selectAll('.enemy');
     
-    images
+    enemies
       .transition()
       .tween('collisions', this.collision.bind(this))
       .duration(1000)
-      .attr('href', 'asteroid.png')
-      .attr('height', 60)
-      .attr('width', 60)
       .attr('x', function(d) { return d.x; })
       .attr('y', function(d) { return d.y; });
 
     images
       .enter()
       .append('image')
-      .attr('href', 'asteroid.png')
+      .attr('class', 'enemy')
+      .attr('href', 'images/asteroid.png')
       .attr('height', 60)
       .attr('width', 60)
       .attr('x', function(d) { return d.x; })
@@ -86,8 +94,8 @@ class Game {
     let data = [];
     for (let i = 0; i < 10; i++) {
       let circle = {};
-      circle.x = Math.random() * 750;
-      circle.y = Math.random() * 550;
+      circle.x = Math.random() * 1100;
+      circle.y = Math.random() * 700;
       data.push(circle);
     }
     return data;

@@ -8,4 +8,18 @@ Feel free to use it if you like. */
     text-align: right;
     padding: 0 25px;
     font-family: arial, sans-serif;
+    opacity: .5;
+}
+body {
+  background-image: url("images/space.jpg");
+  background-size: cover;
+}
+
+.explosion {
+  background-image: url("images/explosion.gif")
+}
+
+.redbody {
+  background-image: none;
+  background-color: red;
 }

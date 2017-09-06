@@ -19,9 +19,9 @@ class Game {
   }
 
   updateScore() {
-    document.getElementsByClassName('collisions')[0].textContent = 'Collisions: ' + this.collisions;
-    document.getElementsByClassName('highscore')[0].textContent = 'High Score: ' + this.highScore;
-    document.getElementsByClassName('current')[0].textContent = 'Current Score: ' + this.currentScore;
+    d3.select('.scoreboard .current span').text(this.currentScore);
+    d3.select('.scoreboard .highscore span').text(this.highScore);
+    d3.select('.scoreboard .collisions span').text(this.collisions);
   }
 
 

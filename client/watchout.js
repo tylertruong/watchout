@@ -10,6 +10,7 @@ class Game {
     this.highScore = 0;
     this.currentScore = 0;
     setInterval(() => {
+      this.collided = false;
       this.currentScore++;
       this.data = this.generateCircles();
       this.updateScreen(this.data);
@@ -51,6 +52,10 @@ class Game {
       var x2 = d3.select(this).attr('x');
       var y2 = d3.select(this).attr('y');
       if (distance(x1, y1, x2, y2) < 60) {
+        if (game.collided === false) {
+          game.collided = true;
+          game.collisions++;
+        }
         document.body.classList.add('redbody');
         d3.select('.player').attr('href', 'images/explosion.gif');
         setTimeout(() => {
@@ -59,7 +64,6 @@ class Game {
         setTimeout(() => {
           d3.select('.player').attr('href', 'images/spaceship.png');
         }, 1000);
-        game.collisions++;
         if (game.currentScore > game.highScore) {
           game.highScore = game.currentScore;
         }
